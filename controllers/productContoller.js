@@ -8,6 +8,10 @@ exports.createProduct = async (req, res, next) => {
       return res.status(400).json({ errors: errors.array() });
     }
     
+    if (!req.user) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
     const productData = {
       ...req.body,
       sellerId: req.user._id
