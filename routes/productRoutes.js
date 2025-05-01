@@ -4,13 +4,17 @@ const productController = require("../controllers/productContoller");
 const auth = require("../middleware/auth");
 
 const router = express.Router();
+
+// Move the seller route before the :id routes to prevent path conflicts
+router.get("/seller/me", auth, productController.getSellerProducts);
+
 router.get("/", productController.getProducts);
 router.get("/:id", productController.getProductById);
 
 // create //error here because of auth
 router.post(
   "/",
-  // auth,
+  auth,
   [
     check("title", "Title is required").not().isEmpty(),
     check("description", "Description is required").not().isEmpty(),
@@ -57,6 +61,5 @@ router.put(
 );
 
 router.delete("/:id", auth, productController.deleteProduct);
-router.get("/seller/me", auth, productController.getSellerProducts);
 
 module.exports = router;

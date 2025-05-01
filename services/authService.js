@@ -2,8 +2,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { JWT_SECRET, JWT_EXPIRES_IN } = require("../config/env");
 
-// Check if JWT_SECRET is defined, if not use a default (for development only)
-const SECRET_KEY = JWT_SECRET || "your_secure_secret_key";
 const EXPIRES_IN = JWT_EXPIRES_IN || "1d"; // Default expiration time
 
 exports.register = async (userData) => {
@@ -15,7 +13,8 @@ exports.register = async (userData) => {
     throw new Error("User with this email already exists");
   }
 
-  // Create new user
+  // Create new user - passwordHash field is now set to password directly
+  // instead of wrapping it in a passwordHash property
   const user = new User(userData);
   await user.save();
 
@@ -61,11 +60,25 @@ exports.login = async (email, password) => {
 };
 
 const generateToken = (user) => {
-  if (!SECRET_KEY || SECRET_KEY.trim() === "") {
+  if (!JWT_SECRET || JWT_SECRET.trim() === "") {
     throw new Error("JWT_SECRET is not configured properly");
   }
 
-  return jwt.sign({ id: user._id, role: user.role }, SECRET_KEY, {
+  // Add debugging to see what secret is being used for signing
+  console.log(
+    "JWT_SECRET in authService.js:",
+    JWT_SECRET
+      ? `${JWT_SECRET.substring(0, 3)}...${JWT_SECRET.substring(
+          JWT_SECRET.length - 3
+        )}`
+      : "undefined"
+  );
+  console.log("Creating token for user:", user._id.toString());
+
+  // Use JWT_SECRET directly
+  const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
     expiresIn: EXPIRES_IN,
   });
+
+  return token;
 };
