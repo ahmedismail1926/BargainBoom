@@ -30,11 +30,15 @@ exports.createOrderFromOffer = async (offerId, buyerId) => {
   if (!product) {
     throw new Error("Product not found");
   }
+
+  // Get quantity from offer or default to 1
+  const quantity = offer.quantity || 1;
+
   const orderData = {
     productId: product._id,
     buyerId: offer.buyerId._id,
     sellerId: product.sellerId,
-    quantity: 1, // Default to 1
+    quantity: quantity,
     price: offer.offerPrice,
   };
 

@@ -1,56 +1,137 @@
 const { validationResult } = require("express-validator");
 const offerService = require("../services/offerService");
 const productService = require("../services/productService");
+const { errorResponse, successResponse } = require("../utils/responseHandler");
+const logger = require("../utils/logger");
+
 //counteroffer
 exports.createOffer = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return errorResponse(res, "Validation failed", 400, errors.array());
     }
 
-    const { productId, offerPrice } = req.body;
-    const product = await productService.getProductById(productId);
+    // Check if user is authenticated
+    if (!req.user) {
+      return errorResponse(res, "Authentication required", 401);
+    }
+
+    const { productId, offerPrice, quantity = 1 } = req.body;
+
+    if (!productId) {
+      return errorResponse(res, "Product ID is required", 400);
+    }
+
+    let product;
+    try {
+      product = await productService.getProductById(productId);
+    } catch (err) {
+      logger.error(`Error fetching product: ${err.message}`, {
+        productId,
+        error: err,
+      });
+      return errorResponse(res, "Invalid product ID format", 400);
+    }
+
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return errorResponse(res, "Product not found", 404);
     }
+
     if (product.status !== "available") {
-      return res
-        .status(400)
-        .json({ message: "Product is not available for offers" });
+      return errorResponse(res, "Product is not available for offers", 400);
     }
+
     if (product.isAuction) {
-      return res
-        .status(400)
-        .json({ message: "Cannot make counter offers on auction items" });
+      return errorResponse(
+        res,
+        "Cannot make counter offers on auction items",
+        400
+      );
     }
-    if (product.sellerId.toString() === req.user._id.toString()) {
-      return res
-        .status(400)
-        .json({ message: "Sellers cannot make offers on their own products" });
+
+    // Handle case where sellerId might be populated or a raw ObjectId
+    let sellerIdToCompare = product.sellerId;
+    if (product.sellerId && product.sellerId._id) {
+      sellerIdToCompare = product.sellerId._id;
+    }
+
+    // Compare as strings to ensure consistent comparison
+    if (String(sellerIdToCompare) === String(req.user._id)) {
+      return errorResponse(
+        res,
+        "Sellers cannot make offers on their own products",
+        400
+      );
+    }
+
+    // Validate price
+    if (offerPrice <= 0) {
+      return errorResponse(res, "Offer price must be greater than zero", 400);
+    }
+
+    // Check if quantity is valid
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      return errorResponse(res, "Quantity must be a positive integer", 400);
+    }
+
+    if (quantity > product.quantity) {
+      return errorResponse(
+        res,
+        "Requested quantity exceeds available quantity",
+        400
+      );
     }
 
     const offerData = {
       productId,
       buyerId: req.user._id,
       offerPrice,
+      quantity,
     };
 
     const offer = await offerService.createOffer(offerData);
-    res.status(201).json(offer);
+    return successResponse(res, offer, "Offer created successfully", 201);
   } catch (error) {
-    next(error);
+    logger.error("Error creating offer:", {
+      error: error.message,
+      stack: error.stack,
+    });
+    return errorResponse(
+      res,
+      "Failed to create offer: " + (error.message || "Unknown error"),
+      500
+    );
   }
 };
+
 //seller's view
 exports.getProductOffers = async (req, res, next) => {
   try {
+    // Check if user is authenticated
+    if (!req.user) {
+      return errorResponse(res, "Authentication required", 401);
+    }
+
     const productId = req.params.productId;
+    if (!productId) {
+      return errorResponse(res, "Product ID is required", 400);
+    }
 
     // Check if the product exists
-    const product = await productService.getProductById(productId);
+    let product;
+    try {
+      product = await productService.getProductById(productId);
+    } catch (err) {
+      logger.error(`Error fetching product: ${err.message}`, {
+        productId,
+        error: err,
+      });
+      return errorResponse(res, "Invalid product ID format", 400);
+    }
+
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return errorResponse(res, "Product not found", 404);
     }
 
     // Handle case where sellerId might be populated or a raw ObjectId
@@ -61,38 +142,85 @@ exports.getProductOffers = async (req, res, next) => {
 
     // Compare as strings to ensure consistent comparison
     if (String(sellerIdToCompare) !== String(req.user._id)) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to view offers for this product" });
+      logger.warn(
+        `Unauthorized access attempt to view offers for product ${productId} by user ${req.user._id}`
+      );
+      return errorResponse(
+        res,
+        "Not authorized to view offers for this product",
+        403
+      );
     }
 
     const offers = await offerService.getOffersByProduct(productId);
-    res.status(200).json(offers);
+    return successResponse(res, offers, "Offers retrieved successfully");
   } catch (error) {
-    next(error);
+    logger.error("Error getting product offers:", {
+      error: error.message,
+      stack: error.stack,
+    });
+    return errorResponse(
+      res,
+      "Failed to retrieve offers: " + (error.message || "Unknown error"),
+      500
+    );
   }
 };
+
 exports.getBuyerOffers = async (req, res, next) => {
   try {
+    // Check if user is authenticated
+    if (!req.user) {
+      return errorResponse(res, "Authentication required", 401);
+    }
+
     const offers = await offerService.getOffersByBuyer(req.user._id);
-    res.status(200).json(offers);
+    return successResponse(res, offers, "Buyer offers retrieved successfully");
   } catch (error) {
-    next(error);
+    logger.error("Error getting buyer offers:", {
+      error: error.message,
+      userId: req.user?._id,
+    });
+    return errorResponse(
+      res,
+      "Failed to retrieve buyer offers: " + (error.message || "Unknown error"),
+      500
+    );
   }
 };
+
 exports.updateOfferStatus = async (req, res, next) => {
   try {
+    // Check if user is authenticated
+    if (!req.user) {
+      return errorResponse(res, "Authentication required", 401);
+    }
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return errorResponse(res, "Validation failed", 400, errors.array());
     }
 
     const { status, counterPrice } = req.body;
     const offerId = req.params.id;
 
-    const offer = await offerService.getOfferById(offerId);
+    if (!offerId) {
+      return errorResponse(res, "Offer ID is required", 400);
+    }
+
+    let offer;
+    try {
+      offer = await offerService.getOfferById(offerId);
+    } catch (err) {
+      logger.error(`Error fetching offer: ${err.message}`, {
+        offerId,
+        error: err,
+      });
+      return errorResponse(res, "Invalid offer ID format", 400);
+    }
+
     if (!offer) {
-      return res.status(404).json({ message: "Offer not found" });
+      return errorResponse(res, "Offer not found", 404);
     }
 
     // Handle case where productId might be populated or a raw ObjectId
@@ -101,9 +229,19 @@ exports.updateOfferStatus = async (req, res, next) => {
       productId = offer.productId._id;
     }
 
-    const product = await productService.getProductById(productId);
+    let product;
+    try {
+      product = await productService.getProductById(productId);
+    } catch (err) {
+      logger.error(`Error fetching product: ${err.message}`, {
+        productId,
+        error: err,
+      });
+      return errorResponse(res, "Error retrieving product information", 500);
+    }
+
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return errorResponse(res, "Product not found or has been removed", 404);
     }
 
     // Handle case where sellerId might be populated or a raw ObjectId
@@ -114,16 +252,38 @@ exports.updateOfferStatus = async (req, res, next) => {
 
     // Compare as strings to ensure consistent comparison
     if (String(sellerIdToCompare) !== String(req.user._id)) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to update this offer" });
+      logger.warn(
+        `Unauthorized update attempt for offer ${offerId} by user ${req.user._id}`
+      );
+      return errorResponse(res, "Not authorized to update this offer", 403);
+    }
+
+    // Validate status
+    if (!["accepted", "rejected", "countered"].includes(status)) {
+      return errorResponse(
+        res,
+        "Invalid status. Must be accepted, rejected, or countered",
+        400
+      );
     }
 
     // If status is countered, counterPrice is required
-    if (status === "countered" && !counterPrice) {
-      return res.status(400).json({
-        message: "Counter price is required when countering an offer",
-      });
+    if (status === "countered") {
+      if (!counterPrice) {
+        return errorResponse(
+          res,
+          "Counter price is required when countering an offer",
+          400
+        );
+      }
+
+      if (counterPrice <= 0) {
+        return errorResponse(
+          res,
+          "Counter price must be greater than zero",
+          400
+        );
+      }
     }
 
     const updatedOffer = await offerService.updateOfferStatus(
@@ -131,8 +291,17 @@ exports.updateOfferStatus = async (req, res, next) => {
       status,
       counterPrice
     );
-    res.status(200).json(updatedOffer);
+
+    return successResponse(res, updatedOffer, `Offer ${status} successfully`);
   } catch (error) {
-    next(error);
+    logger.error("Error updating offer status:", {
+      error: error.message,
+      stack: error.stack,
+    });
+    return errorResponse(
+      res,
+      "Failed to update offer: " + (error.message || "Unknown error"),
+      500
+    );
   }
 };
