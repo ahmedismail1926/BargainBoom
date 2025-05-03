@@ -3,7 +3,7 @@ const { check } = require("express-validator");
 const messageController = require("../controllers/messageController");
 const auth = require("../middleware/auth");
 const validation = require("../middleware/validation");
-
+//message latest change at 3:09 am
 const router = express.Router();
 
 router.get("/chat/:userId", auth, messageController.getChatHistory);
