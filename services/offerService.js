@@ -31,10 +31,19 @@ exports.updateOfferStatus = async (offerId, status, counterPrice) => {
   if (status === "countered" && counterPrice) {
     updateData.offerPrice = counterPrice;
   }
-
-  return await CounterOffer.findByIdAndUpdate(
+  const offer = await CounterOffer.findByIdAndUpdate(
     offerId,
     { $set: updateData },
     { new: true }
-  );
+  ).populate("productId");
+
+  // If offer is accepted, update the product quantity by the quantity specified in the offer
+  if (status === "accepted") {
+    await productService.updateProductQuantity(
+      offer.productId._id,
+      offer.quantity || 1 // Use offer quantity or default to 1 if not specified
+    );
+  }
+
+  return offer;
 };

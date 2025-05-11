@@ -256,15 +256,25 @@ exports.updateOfferStatus = async (req, res, next) => {
         `Unauthorized update attempt for offer ${offerId} by user ${req.user._id}`
       );
       return errorResponse(res, "Not authorized to update this offer", 403);
-    }
-
-    // Validate status
+    } // Validate status
     if (!["accepted", "rejected", "countered"].includes(status)) {
       return errorResponse(
         res,
         "Invalid status. Must be accepted, rejected, or countered",
         400
       );
+    }
+
+    // Validate quantity for acceptance
+    if (status === "accepted") {
+      // Check if product has enough quantity
+      if (offer.quantity > product.quantity) {
+        return errorResponse(
+          res,
+          "Cannot accept offer - not enough product quantity available",
+          400
+        );
+      }
     }
 
     // If status is countered, counterPrice is required
@@ -285,14 +295,24 @@ exports.updateOfferStatus = async (req, res, next) => {
         );
       }
     }
+    try {
+      const updatedOffer = await offerService.updateOfferStatus(
+        offerId,
+        status,
+        counterPrice
+      );
 
-    const updatedOffer = await offerService.updateOfferStatus(
-      offerId,
-      status,
-      counterPrice
-    );
+      let message = `Offer ${status} successfully`;
+      if (status === "accepted") {
+        message =
+          "Offer accepted successfully. Product quantity has been updated.";
+      }
 
-    return successResponse(res, updatedOffer, `Offer ${status} successfully`);
+      return successResponse(res, updatedOffer, message);
+    } catch (error) {
+      logger.error(`Error during offer status update: ${error.message}`);
+      return errorResponse(res, error.message, 400);
+    }
   } catch (error) {
     logger.error("Error updating offer status:", {
       error: error.message,

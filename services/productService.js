@@ -58,7 +58,6 @@ exports.updateProductQuantity = async (productId, quantityToReduce) => {
   if (!product) {
     throw new Error('Product not found');
   }
-  
   if (product.quantity < quantityToReduce) {
     throw new Error('Insufficient product quantity');
   }
@@ -68,7 +67,6 @@ exports.updateProductQuantity = async (productId, quantityToReduce) => {
   if (product.quantity === 0) {
     product.status = 'sold';
   }
-  
   await product.save();
   return product;
 };

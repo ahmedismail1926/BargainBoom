@@ -35,7 +35,6 @@ router.post(
   productController.createProduct
 );
 
-// update
 router.put(
   "/:id",
   auth,
