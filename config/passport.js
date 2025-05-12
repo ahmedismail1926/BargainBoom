@@ -19,7 +19,22 @@ if (!JWT_SECRET) {
 }
 
 const options = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: (req) => {
+    // Custom extractor function to be more forgiving with token format
+    let token = null;
+    if (req.headers && req.headers.authorization) {
+      const auth = req.headers.authorization;
+      // Handle both "Bearer token" and raw "token" formats
+      if (auth.startsWith("Bearer ")) {
+        token = auth.split(" ")[1];
+      } else if (auth.trim().length > 0) {
+        // If there's no "Bearer " prefix but there is a string, use it as token
+        token = auth.trim();
+        logger.warn("Token provided without 'Bearer ' prefix");
+      }
+    }
+    return token;
+  },
   secretOrKey: JWT_SECRET,
   jsonWebTokenOptions: {
     ignoreExpiration: false, // Enforce token expiration

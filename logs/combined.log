@@ -644,3 +644,111 @@
 {"level":"info","message":"JWT payload received:","payload":{"exp":1747605571,"iat":1747000771,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 02:27:03"}
 {"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 02:27:03"}
 {"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 02:27:03"}
+{"0":"y","1":"o","2":"u","3":".","4":".","5":".","6":"k","7":"e","8":"y","level":"info","message":"JWT_SECRET in passport.js:","service":"bargainboom-api","timestamp":"2025-05-12 03:33:51"}
+{"level":"info","message":"Server running on port 5000","service":"bargainboom-api","timestamp":"2025-05-12 03:33:51"}
+{"level":"info","message":"MongoDB connected successfully","service":"bargainboom-api","timestamp":"2025-05-12 03:33:52"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 03:40:33"}
+{"decoded":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 03:40:33"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 03:40:33"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"service":"bargainboom-api","timestamp":"2025-05-12 03:40:33"}
+{"level":"info","message":"User found for id: 6812a7b3b86f0ab4601392f0","service":"bargainboom-api","timestamp":"2025-05-12 03:40:33"}
+{"level":"info","message":"User authenticated successfully: 6812a7b3b86f0ab4601392f0 (role: seller)","service":"bargainboom-api","timestamp":"2025-05-12 03:40:33"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 03:42:21"}
+{"decoded":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 03:42:21"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 03:42:21"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"service":"bargainboom-api","timestamp":"2025-05-12 03:42:21"}
+{"level":"info","message":"User found for id: 6812a7b3b86f0ab4601392f0","service":"bargainboom-api","timestamp":"2025-05-12 03:42:21"}
+{"level":"info","message":"User authenticated successfully: 6812a7b3b86f0ab4601392f0 (role: seller)","service":"bargainboom-api","timestamp":"2025-05-12 03:42:21"}
+{"headerPreview":"BearereyJhbGciO...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 03:51:23"}
+{"level":"warn","message":"Authentication failed:","reason":"No auth token","service":"bargainboom-api","timestamp":"2025-05-12 03:51:23"}
+{"headerPreview":"BearereyJhbGciO...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 03:52:05"}
+{"level":"warn","message":"Authentication failed:","reason":"No auth token","service":"bargainboom-api","timestamp":"2025-05-12 03:52:05"}
+{"headerPreview":"BearereyJhbGciO...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 03:53:19"}
+{"level":"warn","message":"Authentication failed:","reason":"No auth token","service":"bargainboom-api","timestamp":"2025-05-12 03:53:19"}
+{"headerPreview":"BearereyJhbGciO...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 03:54:52"}
+{"level":"warn","message":"Authentication failed:","reason":"No auth token","service":"bargainboom-api","timestamp":"2025-05-12 03:54:52"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 03:56:35"}
+{"decoded":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 03:56:35"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 03:56:35"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"service":"bargainboom-api","timestamp":"2025-05-12 03:56:35"}
+{"level":"info","message":"User found for id: 6812a7b3b86f0ab4601392f0","service":"bargainboom-api","timestamp":"2025-05-12 03:56:45"}
+{"level":"info","message":"User authenticated successfully: 6812a7b3b86f0ab4601392f0 (role: seller)","service":"bargainboom-api","timestamp":"2025-05-12 03:56:45"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:04:03"}
+{"decoded":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:04:03"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:04:03"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 04:04:03"}
+{"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:04:13"}
+{"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 04:04:13"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:04:18"}
+{"decoded":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:04:18"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:04:18"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 04:04:18"}
+{"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:04:18"}
+{"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 04:04:18"}
+{"level":"info","message":"Fetching chat history: user=6812ce6f12cca1b04bf6979b, partner=6812a7b3b86f0ab4601392f0","service":"bargainboom-api","timestamp":"2025-05-12 04:04:18"}
+{"0":"y","1":"o","2":"u","3":".","4":".","5":".","6":"k","7":"e","8":"y","level":"info","message":"JWT_SECRET in passport.js:","service":"bargainboom-api","timestamp":"2025-05-12 04:39:25"}
+{"level":"info","message":"Server running on port 5000","service":"bargainboom-api","timestamp":"2025-05-12 04:39:25"}
+{"level":"info","message":"MongoDB connected successfully","service":"bargainboom-api","timestamp":"2025-05-12 04:39:26"}
+{"headerPreview":"BearereyJhbGciO...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:39:35"}
+{"level":"warn","message":"Authentication failed:","reason":"No auth token","service":"bargainboom-api","timestamp":"2025-05-12 04:39:35"}
+{"headerPreview":"BearereyJhbGciO...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:39:37"}
+{"level":"warn","message":"Authentication failed:","reason":"No auth token","service":"bargainboom-api","timestamp":"2025-05-12 04:39:37"}
+{"0":"y","1":"o","2":"u","3":".","4":".","5":".","6":"k","7":"e","8":"y","level":"info","message":"JWT_SECRET in passport.js:","service":"bargainboom-api","timestamp":"2025-05-12 04:46:21"}
+{"level":"info","message":"Server running on port 5000","service":"bargainboom-api","timestamp":"2025-05-12 04:46:22"}
+{"level":"info","message":"MongoDB connected successfully","service":"bargainboom-api","timestamp":"2025-05-12 04:46:22"}
+{"headerPreview":"BearereyJhbGciO...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:47:33"}
+{"level":"warn","message":"Token provided without 'Bearer ' prefix","service":"bargainboom-api","timestamp":"2025-05-12 04:47:33"}
+{"level":"warn","message":"Authentication failed:","reason":"invalid token","service":"bargainboom-api","timestamp":"2025-05-12 04:47:33"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:47:49"}
+{"decoded":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:47:49"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:47:49"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 04:47:49"}
+{"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:47:49"}
+{"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 04:47:49"}
+{"body":{"bidAmount":110,"productId":"6821474d3a62a8633f356beb"},"headers":{"authorization":"Present (redacted)","content-type":"application/json"},"level":"info","message":"Auction bid request received from IP: ::1","service":"bargainboom-api","timestamp":"2025-05-12 04:47:49","user":{"id":"6812ce6f12cca1b04bf6979b","role":"buyer"}}
+{"level":"info","message":"Manually setting user from token: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:47:49"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:50:22"}
+{"decoded":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:50:22"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:50:22"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747599685,"iat":1746994885,"id":"6812a7b3b86f0ab4601392f0","role":"seller"},"service":"bargainboom-api","timestamp":"2025-05-12 04:50:22"}
+{"level":"info","message":"Manually setting user from token: 6812a7b3b86f0ab4601392f0","service":"bargainboom-api","timestamp":"2025-05-12 04:50:22"}
+{"level":"info","message":"User found for id: 6812a7b3b86f0ab4601392f0","service":"bargainboom-api","timestamp":"2025-05-12 04:50:22"}
+{"level":"info","message":"User authenticated successfully: 6812a7b3b86f0ab4601392f0 (role: seller)","service":"bargainboom-api","timestamp":"2025-05-12 04:50:22"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:50:40"}
+{"decoded":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:50:40"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:50:40"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 04:50:40"}
+{"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:50:40"}
+{"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 04:50:40"}
+{"body":{"bidAmount":110,"productId":"6821474d3a62a8633f356beb"},"headers":{"authorization":"Present (redacted)","content-type":"application/json"},"level":"info","message":"Auction bid request received from IP: ::1","service":"bargainboom-api","timestamp":"2025-05-12 04:50:40","user":{"id":"6812ce6f12cca1b04bf6979b","role":"buyer"}}
+{"level":"info","message":"Manually setting user from token: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:50:40"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:52:07"}
+{"decoded":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:52:07"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:52:07"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 04:52:07"}
+{"level":"info","message":"Manually setting user from token: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:52:07"}
+{"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:52:07"}
+{"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 04:52:07"}
+{"body":{"bidAmount":110,"productId":"6821474d3a62a8633f356beb"},"headers":{"authorization":"Present (redacted)","content-type":"application/json"},"level":"info","message":"Auction bid request received from IP: ::1","service":"bargainboom-api","timestamp":"2025-05-12 04:52:07","user":{"id":"6812ce6f12cca1b04bf6979b","role":"buyer"}}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"decoded":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"body":{"bidAmount":110,"productId":"682153de622cca2e1071eab7"},"headers":{"authorization":"Present (redacted)","content-type":"application/json"},"level":"info","message":"Auction bid request received from IP: ::1","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14","user":{"id":"6812ce6f12cca1b04bf6979b","role":"buyer"}}
+{"level":"info","message":"Manually setting user from token: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"level":"info","message":"New bid created: 110 by user 6812ce6f12cca1b04bf6979b for product 682153de622cca2e1071eab7","service":"bargainboom-api","timestamp":"2025-05-12 04:52:14"}
+{"headerPreview":"Bearer eyJhbGci...","level":"info","message":"Auth header present:","service":"bargainboom-api","timestamp":"2025-05-12 04:52:47"}
+{"decoded":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"level":"info","message":"Token payload (decoded without verification):","service":"bargainboom-api","timestamp":"2025-05-12 04:52:47"}
+{"level":"info","message":"Manual token verification successful","service":"bargainboom-api","timestamp":"2025-05-12 04:52:47"}
+{"level":"info","message":"JWT payload received:","payload":{"exp":1747616080,"iat":1747011280,"id":"6812ce6f12cca1b04bf6979b","role":"buyer"},"service":"bargainboom-api","timestamp":"2025-05-12 04:52:47"}
+{"level":"info","message":"Manually setting user from token: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:52:47"}
+{"level":"info","message":"User found for id: 6812ce6f12cca1b04bf6979b","service":"bargainboom-api","timestamp":"2025-05-12 04:52:47"}
+{"level":"info","message":"User authenticated successfully: 6812ce6f12cca1b04bf6979b (role: buyer)","service":"bargainboom-api","timestamp":"2025-05-12 04:52:47"}
+{"0":"y","1":"o","2":"u","3":".","4":".","5":".","6":"k","7":"e","8":"y","level":"info","message":"JWT_SECRET in passport.js:","service":"bargainboom-api","timestamp":"2025-05-12 05:30:27"}
+{"level":"info","message":"Server running on port 5000","service":"bargainboom-api","timestamp":"2025-05-12 05:30:27"}
+{"level":"info","message":"MongoDB connected successfully","service":"bargainboom-api","timestamp":"2025-05-12 05:30:28"}
+{"0":"y","1":"o","2":"u","3":".","4":".","5":".","6":"k","7":"e","8":"y","level":"info","message":"JWT_SECRET in passport.js:","service":"bargainboom-api","timestamp":"2025-05-12 05:37:37"}
+{"level":"info","message":"Server running on port 5000","service":"bargainboom-api","timestamp":"2025-05-12 05:37:37"}
+{"level":"info","message":"MongoDB connected successfully","service":"bargainboom-api","timestamp":"2025-05-12 05:37:38"}

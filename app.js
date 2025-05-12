@@ -14,6 +14,7 @@ const offerRoutes = require("./routes/offerRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const messageRoutes = require("./routes/messageRoutes");
+const auctionRoutes = require("./routes/auctionRoutes");
 const app = express();
 connect();
 
@@ -55,6 +56,7 @@ app.use("/api/offers", offerRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/auctions", auctionRoutes);
 
 app.use(errorMiddleware);
 

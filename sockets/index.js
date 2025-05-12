@@ -49,7 +49,6 @@ module.exports = (io) => {
       next(new Error("Authentication error - Invalid token"));
     }
   });
-
   // Real-time user presence tracking
   const onlineUsers = new Map();
 
@@ -63,6 +62,11 @@ module.exports = (io) => {
       socketId: socket.id,
       lastActive: new Date(),
     });
+
+    // Join user-specific notification room
+    const userRoom = `user-${userId}`;
+    socket.join(userRoom);
+    logger.info(`User ${userId} joined personal notification room ${userRoom}`);
 
     // Broadcast user online status
     io.emit("user-status-change", {

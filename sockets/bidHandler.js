@@ -1,136 +1,178 @@
-const Product = require('../models/Product');
-const logger = require('../utils/logger');
+const Product = require("../models/Product");
+const AuctionBid = require("../models/AuctionBid");
+const logger = require("../utils/logger");
 
 module.exports = (io, socket) => {
   // Join a bidding room for a product
-  socket.on('join-bidding', async (productId) => {
+  socket.on("join-bidding", async (productId) => {
     try {
       // Check if product exists
       const product = await Product.findById(productId);
       if (!product) {
-        return socket.emit('error', { message: 'Product not found' });
+        return socket.emit("error", { message: "Product not found" });
       }
-      
+
       // Check if product is in auction mode
       if (!product.isAuction) {
-        return socket.emit('error', { message: 'This product is not in auction mode' });
-      }
-      
-      const roomId = `bidding-${productId}`;
-      socket.join(roomId);
-      logger.info(`User ${socket.user._id} joined bidding room for product ${productId}`);
-      
-      // Send current product info to the user
-      socket.emit('auction-status', {
-        productId: product._id,
-        currentPrice: product.basePrice,
-        auctionEndTime: product.auctionEndTime,
-        endsIn: product.auctionEndTime ? product.auctionEndTime - new Date() : null
-      });
-    } catch (error) {
-      logger.error('Error joining bidding room:', error);
-      socket.emit('error', { message: 'Failed to join bidding room' });
-    }
-  });
-  
-  // Place a bid
-  socket.on('place-bid', async (data) => {
-    try {
-      const { productId, bidAmount } = data;
-      
-      // Validate bid amount
-      if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
-        return socket.emit('bid-error', { message: 'Invalid bid amount' });
-      }
-      
-      // Find the product
-      const product = await Product.findById(productId);
-      
-      if (!product) {
-        return socket.emit('bid-error', { message: 'Product not found' });
-      }
-      
-      if (!product.isAuction) {
-        return socket.emit('bid-error', { message: 'This product is not in auction mode' });
-      }
-      
-      if (product.auctionEndTime < new Date()) {
-        return socket.emit('bid-error', { message: 'Auction has ended' });
-      }
-      
-      // Validate bid is higher than current price
-      if (bidAmount <= product.basePrice) {
-        return socket.emit('bid-error', { 
-          message: `Bid must be higher than the current price of ${product.basePrice}`
+        return socket.emit("error", {
+          message: "This product is not in auction mode",
         });
       }
-      
+
+      const roomId = `bidding-${productId}`;
+      socket.join(roomId);
+      logger.info(
+        `User ${socket.user._id} joined bidding room for product ${productId}`
+      );
+
+      try {
+        // Get the current max bid info
+        const maxBid = await AuctionBid.findOne({ productId })
+          .sort({ bidAmount: -1 })
+          .populate("buyerId", "name")
+          .lean();
+
+        // Send current product info to the user
+        socket.emit("auction-status", {
+          productId: product._id,
+          currentPrice: maxBid ? maxBid.bidAmount : product.basePrice,
+          bidderName: maxBid ? maxBid.buyerId.name : null,
+          bidTime: maxBid ? maxBid.createdAt : null,
+          auctionEndTime: product.auctionEndTime,
+          endsIn: product.auctionEndTime
+            ? product.auctionEndTime - new Date()
+            : null,
+        });
+      } catch (error) {
+        logger.error("Error getting max bid info:", error);
+
+        // Fallback to product base price if max bid info fails
+        socket.emit("auction-status", {
+          productId: product._id,
+          currentPrice: product.basePrice,
+          auctionEndTime: product.auctionEndTime,
+          endsIn: product.auctionEndTime
+            ? product.auctionEndTime - new Date()
+            : null,
+        });
+      }
+    } catch (error) {
+      logger.error("Error joining bidding room:", error);
+      socket.emit("error", { message: "Failed to join bidding room" });
+    }
+  });
+
+  // Place a bid
+  socket.on("place-bid", async (data) => {
+    try {
+      const { productId, bidAmount } = data;
+
+      // Validate bid amount
+      if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
+        return socket.emit("bid-error", { message: "Invalid bid amount" });
+      }
+
+      // Find the product
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        return socket.emit("bid-error", { message: "Product not found" });
+      }
+
+      if (!product.isAuction) {
+        return socket.emit("bid-error", {
+          message: "This product is not in auction mode",
+        });
+      }
+
+      if (product.auctionEndTime < new Date()) {
+        return socket.emit("bid-error", { message: "Auction has ended" });
+      }
+
+      // Get current max bid
+      const currentMaxBid = await AuctionBid.findOne({ productId })
+        .sort({ bidAmount: -1 })
+        .lean();
+
+      // Determine the minimum bid amount
+      const minBidAmount = currentMaxBid
+        ? currentMaxBid.bidAmount
+        : product.basePrice;
+
+      // Validate bid is higher than or equal to current price
+      if (bidAmount < minBidAmount) {
+        return socket.emit("bid-error", {
+          message: `Bid must be at least ${minBidAmount}`,
+        });
+      }
+
       // Check if the user is not the seller
       if (product.sellerId.toString() === socket.user._id.toString()) {
-        return socket.emit('bid-error', { message: 'Sellers cannot bid on their own products' });
+        return socket.emit("bid-error", {
+          message: "Sellers cannot bid on their own products",
+        });
       }
-      
-      // Update the product's base price (current highest bid)
-      product.basePrice = bidAmount;
-      await product.save();
-      
+
+      // Create the bid
+      const bid = new AuctionBid({
+        productId,
+        buyerId: socket.user._id,
+        bidAmount,
+      });
+
+      await bid.save();
+
+      logger.info(
+        `New socket bid created: ${bidAmount} by user ${socket.user._id} for product ${productId}`
+      );
+
+      // Update the product's base price to reflect the new max bid
+      await Product.findByIdAndUpdate(
+        productId,
+        { basePrice: bidAmount },
+        { new: true }
+      );
+
       // Get bidder's name
       const bidderName = socket.user.name;
-      
+
       // Emit the new bid to all users in the room
       const roomId = `bidding-${productId}`;
-      io.to(roomId).emit('new-bid', {
+      io.to(roomId).emit("new-bid", {
         productId,
         bidAmount,
         bidderId: socket.user._id,
         bidderName,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
-      
+
       // Notify the seller about the new bid
-      notifySellerAboutBid(io, product.sellerId, {
+      const sellerRoom = `user-${product.sellerId}`;
+      io.to(sellerRoom).emit("bid-notification", {
         productId,
         productTitle: product.title,
         bidAmount,
-        bidderName
+        bidderName,
+        timestamp: new Date(),
       });
+
+      logger.info(
+        `Bid notification sent to seller ${product.sellerId} for product ${productId}`
+      );
     } catch (error) {
-      logger.error('Error placing bid:', error);
-      socket.emit('bid-error', { message: 'Failed to place bid' });
+      logger.error("Error placing bid:", error);
+      socket.emit("bid-error", {
+        message: "Failed to place bid: " + error.message,
+      });
     }
   });
-  
+
   // Leave bidding room
-  socket.on('leave-bidding', (productId) => {
+  socket.on("leave-bidding", (productId) => {
     const roomId = `bidding-${productId}`;
     socket.leave(roomId);
-    logger.info(`User ${socket.user._id} left bidding room for product ${productId}`);
+    logger.info(
+      `User ${socket.user._id} left bidding room for product ${productId}`
+    );
   });
 };
-
-// Helper function to notify sellers about new bids
-async function notifySellerAboutBid(io, sellerId, bidData) {
-  // Find the seller's socket
-  const sellerSocketId = getUserSocketId(io, sellerId);
-  
-  if (sellerSocketId) {
-    io.to(sellerSocketId).emit('bid-notification', {
-      productId: bidData.productId,
-      productTitle: bidData.productTitle,
-      bidAmount: bidData.bidAmount,
-      bidderName: bidData.bidderName,
-      timestamp: new Date()
-    });
-  }
-}
-
-// Helper function to find a user's socket
-function getUserSocketId(io, userId) {
-  const sockets = io.sockets.sockets;
-  for (const [socketId, socket] of sockets) {
-    if (socket.user && socket.user._id.toString() === userId.toString()) {
-      return socketId;
-    }
-  }
-  return null;
-}

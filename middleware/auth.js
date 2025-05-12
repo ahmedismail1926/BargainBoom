@@ -25,6 +25,20 @@ module.exports = (req, res, next) => {
         try {
           const verified = jwt.verify(token, JWT_SECRET);
           logger.info("Manual token verification successful");
+
+          // If passport authentication is failing but manual verification works,
+          // add the user to the request directly as a fallback
+          if (verified && verified.id) {
+            const User = require("../models/User");
+            User.findById(verified.id)
+              .then((user) => {
+                if (user) {
+                  logger.info(`Manually setting user from token: ${user._id}`);
+                  req.user = user;
+                }
+              })
+              .catch((err) => logger.error("Error finding user:", err));
+          }
         } catch (verifyErr) {
           logger.warn("Manual token verification failed:", {
             error: verifyErr.message,
@@ -37,17 +51,33 @@ module.exports = (req, res, next) => {
   } else {
     logger.info("No authorization header found");
   }
-
   passport.authenticate("jwt", { session: false }, (err, user, info) => {
     if (err) {
       logger.error("Auth middleware error:", { error: err });
       return next(err);
     }
 
+    // If passport authentication fails but we have a user from manual verification
+    if (!user && req.user) {
+      logger.info(
+        "Using manually verified user instead of passport authentication"
+      );
+      next();
+      return;
+    }
+
     if (!user) {
       logger.warn("Authentication failed:", {
         reason: info ? info.message : "Unknown reason",
       });
+
+      // Check if token format is wrong (common issue)
+      if (authHeader && !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({
+          message: "Authorization header format should be 'Bearer <token>'",
+        });
+      }
+
       return res.status(401).json({
         message:
           info && info.message
